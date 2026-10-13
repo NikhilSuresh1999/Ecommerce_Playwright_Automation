@@ -2,9 +2,9 @@ name: Enterprise Playwright Automation CI/CD (Toolshop v5.0)
 
 on:
   push:
-    branches: [main, master, develop]
+    branches: [main, master, develop, enterprise_automation]
   pull_request:
-    branches: [main, master, develop]
+    branches: [main, master, develop, enterprise_automation]
   schedule:
     # Nightly regression run at 02:00 UTC
     - cron: '0 2 * * *'
@@ -53,14 +53,12 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: enterprise-playwright-framework/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        working-directory: enterprise-playwright-framework
         run: npm ci
 
       - name: Run Strict TypeScript Typecheck (tsc --noEmit)
-        working-directory: enterprise-playwright-framework
         run: npm run typecheck
 
   e2e-sharded-matrix:
@@ -82,10 +80,9 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: enterprise-playwright-framework/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        working-directory: enterprise-playwright-framework
         run: npm ci
 
       - name: Cache Playwright Chromium Binaries
@@ -93,20 +90,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('enterprise-playwright-framework/package-lock.json') }}
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright Chromium & OS Dependencies
-        working-directory: enterprise-playwright-framework
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Install Playwright OS Dependencies (Cache Hit)
-        working-directory: enterprise-playwright-framework
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
       - name: Execute Playwright Enterprise Test Shard (${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
-        working-directory: enterprise-playwright-framework
         run: |
           if [ "${{ github.event.inputs.test_suite }}" != "" ] && [ "${{ github.event.inputs.test_suite }}" != "all" ]; then
             npm run test:${{ github.event.inputs.test_suite }} -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -120,6 +114,6 @@ jobs:
         with:
           name: playwright-report-shard-${{ matrix.shardIndex }}
           path: |
-            enterprise-playwright-framework/playwright-report/
-            enterprise-playwright-framework/reports/
+            playwright-report/
+            reports/
           retention-days: 14
