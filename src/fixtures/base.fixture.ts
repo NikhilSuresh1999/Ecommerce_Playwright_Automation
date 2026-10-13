@@ -102,12 +102,24 @@ export const test = base.extend<EnterpriseToolshopFixtures>({
         const reqUrl = new URL(request.url());
         const pathname = reqUrl.pathname;
 
-        // Instant local fulfillment for product/rental images so cards render immediately
-        if (pathname.startsWith('/assets/img/') || pathname.endsWith('.avif') || pathname.endsWith('.jpg') || pathname.endsWith('.png')) {
+        // Instant local fulfillment for product/rental images, favicons, and SVGs so cards render immediately without network I/O
+        if (
+          pathname.startsWith('/assets/img/') ||
+          pathname.endsWith('.avif') ||
+          pathname.endsWith('.jpg') ||
+          pathname.endsWith('.jpeg') ||
+          pathname.endsWith('.png') ||
+          pathname.endsWith('.gif') ||
+          pathname.endsWith('.webp') ||
+          pathname.endsWith('.ico') ||
+          pathname.endsWith('.svg')
+        ) {
           await route.fulfill({
             status: 200,
-            contentType: 'image/png',
-            body: TRANSPARENT_PNG_BUFFER,
+            contentType: pathname.endsWith('.svg') ? 'image/svg+xml' : 'image/png',
+            body: pathname.endsWith('.svg')
+              ? Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>', 'utf-8')
+              : TRANSPARENT_PNG_BUFFER,
           });
           return;
         }
@@ -156,6 +168,14 @@ export const test = base.extend<EnterpriseToolshopFixtures>({
           if (fromDisk) {
             cached = fromDisk;
             memoryAssetCache.set(cacheKey, cached);
+          } else if (pathname.startsWith('/assets/i18n/') && pathname.endsWith('.json')) {
+            // Instant fallback to cached en.json for all i18n locale dictionaries so CI never waits on external network
+            const enKey = `${reqUrl.origin}/assets/i18n/en.json`;
+            const enCached = memoryAssetCache.get(enKey) || readFromDiskCache(enKey);
+            if (enCached) {
+              cached = enCached;
+              memoryAssetCache.set(cacheKey, enCached);
+            }
           }
         }
 

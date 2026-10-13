@@ -5,7 +5,8 @@ node_modules/
 test-results/
 playwright-report/
 blob-report/
-playwright/.cache/
+playwright/.cache/*.tmp
+playwright/.cache/toolshop-v5-assets/*.tmp
 reports/
 
 # Environment variables (keep .env.example committed)

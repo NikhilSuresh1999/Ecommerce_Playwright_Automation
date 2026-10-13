@@ -5,11 +5,11 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : EnvConfig.execution.retries,
+  retries: process.env.CI ? 1 : EnvConfig.execution.retries,
   workers: process.env.CI ? 4 : EnvConfig.execution.workers,
-  timeout: 45000,
+  timeout: 30000,
   expect: {
-    timeout: 15000,
+    timeout: 10000,
   },
   reporter: [
     ['list'],
