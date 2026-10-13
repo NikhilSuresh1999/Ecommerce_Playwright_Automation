@@ -1,0 +1,53 @@
+{
+  "name": "enterprise-playwright-toolshop-automation-framework",
+  "version": "3.0.0",
+  "description": "Enterprise-Grade Playwright TypeScript Automation Framework for Toolshop v5.0 (https://practicesoftwaretesting.com) featuring 360+ E2E, UI, Multi-Payment Checkout, Equipment Rentals, i18n, Customer Portal, Security, Accessibility, and REST API Contract Test Scenarios",
+  "private": true,
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:smoke": "npx playwright test --grep @smoke",
+    "test:regression": "npx playwright test --grep @regression",
+    "test:catalog": "npx playwright test tests/01-catalog-filtering-sorting",
+    "test:pdp": "npx playwright test tests/02-product-details-specs",
+    "test:rentals": "npx playwright test tests/03-equipment-rentals",
+    "test:auth": "npx playwright test tests/04-authentication-login",
+    "test:register": "npx playwright test tests/05-user-registration",
+    "test:checkout": "npx playwright test tests/06-shopping-cart-checkout-wizard",
+    "test:contact": "npx playwright test tests/07-contact-support-tickets",
+    "test:account": "npx playwright test tests/08-customer-account-portal",
+    "test:navigation": "npx playwright test tests/09-navigation-i18n-widgets",
+    "test:security": "npx playwright test tests/10-security-access-control",
+    "test:a11y-network": "npx playwright test tests/11-accessibility-responsive-network",
+    "test:api": "npx playwright test tests/12-api-contract-suite",
+    "test:list": "npx playwright test --list",
+    "report": "npx playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "practicesoftwaretesting",
+    "toolshop-v5",
+    "enterprise-automation",
+    "page-object-model",
+    "e2e-testing",
+    "api-testing",
+    "security-testing",
+    "accessibility-testing",
+    "ci-cd",
+    "github-actions",
+    "qa-portfolio"
+  ],
+  "author": "QA Automation Architect",
+  "license": "MIT",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^22.10.0",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.3",
+    "zod": "^3.24.2"
+  }
+}
